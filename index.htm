@@ -4,8 +4,7 @@
 		<meta charset="utf-8">
 		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
 		<title>2048小游戏</title>
-		<script src="https://cdn.staticfile.org/jquery/2.2.4/jquery.min.js"></script>
-		<script src="jquery.min.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 		<style type="text/css">
 			html,body{
 				width: 100%;
@@ -156,10 +155,10 @@
 		</div>
 		<div class="ewm-box">
 			<div class="ewm-img">
-				<img src="ewm.png" alt="二维码">
+				<img src="wxgzh.png" alt="设计师工作日常">
 			</div>
 			<div class="ewm-text">
-				呼啦圈在线求职
+				设计师工作日常
 			</div>
 		</div>
 		<script>
@@ -171,11 +170,9 @@
 </html>
 <script type="text/javascript">
 	(function($) {
-		/**
-		 * User options
-		 */
+		/* 开始摸鱼吧 */
 		var defaults = {
-			delay: 200 //Game speed
+			delay: 180 // 模块移动速度
 		};
 
 		$.fn.init2048 = function(_options) {
@@ -189,11 +186,12 @@
 					left: 'left'
 				},
 
-				holder = {}, //Game outer holder
-				content = {}, //Game inner container
+        // 相关对象
+				holder = {}, 
+				content = {}, 
 
-				matrix = [], //For the logic behind
-				boxes = [], //Boxes storage
+				matrix = [], 
+				boxes = [], 
 
 				isCheating = 0,
 				isGameOver = false;
@@ -202,20 +200,20 @@
 			bind();
 
 			/**
-			 * Restart the game by recreate all DOM elements.
+			 * 重新开始
 			 */
 			function resetGame() {
-				//Reset the props
+				// 重置
 				boxes = [];
 				matrix = [];
 				isCheating = 0;
 				isGameOver = false;
-				//Recreate DOM elements
+				// 创建DOM
 				holder = $('<div>').addClass('holder2048');
 				content = $('<div>').addClass('container').appendTo(holder);
 				for (var i = 0; i < 4; i++) {
 					for (var j = 0; j < 4; j++) {
-						//Reset matrix
+						
 						matrix[i * 4 + j] = {
 							top: i * 70,
 							left: j * 70,
@@ -223,36 +221,25 @@
 							combined: false,
 							value: 0
 						};
-						//This is for the borders of each cell.
+						
 						$('<div>').addClass('mask').css({
 							left: j * 70 + "px",
 							top: i * 70 + "px"
 						}).appendTo(content);
 					}
 				}
-				//Create the first box on board
+				// 创建第一个模块
 				createBox();
-				//Insert game holder and anything to whoever calls this function
+				// 插入大界面中
 				_this.html(holder);
 			}
 
-			/**
-			 * Just for fun.
-			 * Reset the game and place a 4096 box on the board.
-			 */
-			function cheat() {
-				resetGame();
-				createBox(4096);
-			}
 
 			/**
-			 * Create a box and add to game
-			 * Takes 1 or 0 param.
-			 *
-			 * @param value
+			 * 开始
 			 */
 			function createBox(value) {
-				//Check if there are spaces for a new box or not
+				// check 是否还产生新模块
 				var emptyMatrix = 0;
 				for (var i = 0; i < matrix.length; i++) {
 					if (!matrix[i].taken) {
@@ -262,7 +249,7 @@
 				if (emptyMatrix === 0) {
 					return;
 				}
-				//Chose an actual index (means not taken) randomly for the new box
+				// 随机产生新模块&index
 				var random = Math.floor(Math.random() * emptyMatrix + 1);
 				var chosenIndex = 0;
 				for (var j = 0; chosenIndex < matrix.length; chosenIndex++) {
@@ -274,8 +261,8 @@
 						break;
 					}
 				}
-				//Do the create job
-				value = value ? value : (Math.floor(Math.random() * 4 + 1) === 4 ? 4 : 2); //Use the value parse in or (1/4 -> 4 or  3/4 -> 2)
+				// 创建
+				value = value ? value : (Math.floor(Math.random() * 4 + 1) === 4 ? 4 : 2);
 				var newBox = $('<div>').addClass('box').attr({
 					position: chosenIndex,
 					value: value
@@ -286,15 +273,12 @@
 				}).text(value).appendTo(content).animate({
 					opacity: 1
 				}, options.delay * 2);
-				//Finally push it to the boxes array
+				// 推动合并
 				boxes.push(newBox);
 			}
 
 			/**
-			 * Combine 2 boxes into 1
-			 * @param source
-			 * @param target
-			 * @param value
+			 * 模块合并
 			 */
 			function combineBox(source, target, value) {
 				var _value = parseInt(value) * 2;
@@ -322,8 +306,7 @@
 			}
 
 			/**
-			 * Check if game over
-			 * @returns {boolean}
+			 * 游戏状态是否结束
 			 */
 			function gameOver() {
 				if (boxes.length != 16) {
@@ -356,8 +339,7 @@
 			}
 
 			/**
-			 * Game run
-			 * @param dir
+			 * 开始游戏
 			 */
 			function gameRun(dir) {
 				if (isGameOver) {
@@ -368,6 +350,7 @@
 				}
 				if (gameOver()) {
 					isGameOver = true;
+					// 游戏结束弹窗
 					var pop = "<div id='pop' style='width:100%;height:100vh;position:fixed;top:0;left:0;background-color:rgba(0,0,0,.4);z-index:999;'>"+
 									"<div style='width:250px;height:201px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius: 8px;background:url(bg.png) no-repeat left bottom;background-size:100%;'>"+
 										"<div id='close' style='width:24px;height:24px;cursor:pointer;position:absolute;top:5px;right:5px;'><img style='width:100%;' src='close.png' alt='关闭'></div>"+
@@ -380,7 +363,7 @@
 			}
 
 			/**
-			 * Bind keyboard and screen touch events to game
+			 * 绑定事件
 			 */
 			function bind() {
 				$(window).keydown(function(event) {
@@ -435,19 +418,11 @@
 				});
 			}
 
-			/**
-			 * [WARNING] This method is ugly enough for now. Waiting for refactor.
-			 *
-			 * Make a single game move.
-			 * Takes 1 param.
-			 *
-			 * @param dir
-			 * @returns {boolean}
-			 */
+			/***/
 			function run(dir) {
-				var isMoved = false; //This is to indicate that if the game actually moved after calling this function
+				var isMoved = false; // check 是否移动
 				var i, j, k, empty, _empty, position, value1, value2, temp; //Junks
-				//Reset the matrix attr 'combined' before moving
+				// 移动前重置
 				for (i = 0; i < 16; i++) {
 					matrix[i].combined = false;
 				}
@@ -652,10 +627,6 @@
 				} else if (dir == "down") {
 					if (isCheating != -1) {
 						isCheating++;
-						if (isCheating == 10) {
-							cheat();
-							return true;
-						}
 					}
 					for (i = 0; i < 4; i++) {
 						empty = i + 12;
@@ -735,8 +706,7 @@
 		}, {passive: false}); //passive 参数不能省略，用来兼容ios和android
 		
 		/**
-		*hold
-		*close or start
+		* 关闭&重新开始
 		**/
 		$('body').delegate('#close','click',function(){
 			$(this).parents('#pop').remove();
